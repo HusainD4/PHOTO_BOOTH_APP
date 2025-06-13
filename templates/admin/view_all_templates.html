@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <title>Lihat Semua Template</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+        }
+
+        .admin-sidebar {
+            position: fixed;
+            width: 220px;
+            height: 100vh;
+            background-color: #2c3e50;
+            padding: 20px;
+            box-sizing: border-box;
+            color: white;
+            overflow-y: auto;
+        }
+
+        .admin-sidebar h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-weight: 700;
+            font-size: 1.4rem;
+        }
+
+        .admin-sidebar ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .admin-sidebar ul li {
+            margin-bottom: 15px;
+        }
+
+        .admin-sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .admin-sidebar ul li a:hover {
+            color: #e91e63;
+        }
+
+        .admin-main-content {
+            margin-left: 240px; /* beri ruang buat sidebar */
+            padding: 30px 40px;
+            min-height: 100vh;
+        }
+
+        .admin-main-content h1 {
+            margin-bottom: 25px;
+            color: #333;
+            font-weight: 700;
+            font-size: 2rem;
+        }
+
+        .template-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 25px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .template-list li {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.2s ease;
+        }
+
+        .template-list li:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        }
+
+        .template-list img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            object-fit: contain;
+        }
+
+        .template-list p {
+            margin: 0 0 12px;
+            font-weight: 600;
+            color: #444;
+            word-break: break-word;
+        }
+
+        .template-actions {
+            font-size: 0.9rem;
+        }
+
+        .template-actions a {
+            color: #e91e63;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 0 8px;
+            transition: color 0.3s ease;
+        }
+
+        .template-actions a:hover {
+            color: #ad1457;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .admin-main-content {
+                margin-left: 0;
+                padding: 15px 20px;
+            }
+
+            .template-list {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 15px;
+            }
+
+            .admin-sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                padding: 15px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include 'admin/sidebar.html' %}
+    <div class="admin-main-content">
+        <h1>Semua Template</h1>
+        <ul class="template-list">
+            {% for template in templates %}
+                <li>
+                    <img src="{{ url_for('static', filename='img/templates/' + template) }}" alt="{{ template }}" />
+                    <p>{{ template }}</p>
+                    <div class="template-actions">
+                        <a href="{{ url_for('edit_template', template_name=template) }}">Edit</a> |
+                        <a href="{{ url_for('delete_template', template_name=template) }}" onclick="return confirm('Yakin ingin menghapus template ini?');">Hapus</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

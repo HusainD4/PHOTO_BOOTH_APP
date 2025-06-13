@@ -1,0 +1,358 @@
+/* ========== GLOBAL ========== */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f4ff;
+    color: #1e293b;
+}
+
+/* ================= ADMIN STYLE ================= */
+
+/* --- Sidebar --- */
+.admin-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 240px;
+    height: 100vh;
+    background: #1e3a8a; /* biru tua */
+    display: flex;
+    flex-direction: column;
+    padding: 30px 20px;
+    box-shadow: 2px 0 12px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.admin-sidebar h2 {
+    color: #ffffff;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 40px;
+    letter-spacing: 2px;
+    user-select: none;
+    text-align: center;
+}
+
+.admin-sidebar ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.admin-sidebar ul li {
+    margin-bottom: 20px;
+}
+
+.admin-sidebar ul li a {
+    display: block;
+    color: #bfdbfe; /* biru muda */
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: 12px 18px;
+    border-radius: 8px;
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.admin-sidebar ul li a:hover,
+.admin-sidebar ul li a:focus {
+    background-color: #3b82f6; /* biru cerah */
+    color: #ffffff;
+    box-shadow: 0 4px 10px rgba(59, 130, 246, 0.5);
+    outline: none;
+}
+
+.admin-main-content {
+    padding: 30px;
+    margin-left: 250px; /* Lebar sidebar */
+    background-color: #e7f0fc; /* Biru muda */
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.photo-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.photo-list li {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    width: 220px;
+    text-align: center;
+    color: #0d2e61; /* Biru tua */
+}
+
+.photo-list li img {
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 3px 10px rgba(13, 46, 97, 0.2);
+}
+
+.btn-pink {
+    background-color: #ff6f98; /* pink */
+    color: white;
+    padding: 8px 15px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+.btn-pink:hover {
+    background-color: #e65c7f;
+}
+
+
+/* --- Main Content --- */
+.admin-main-content {
+    margin-left: 260px; /* sidebar width + margin */
+    padding: 40px 50px;
+    min-height: 100vh;
+    background: #ffffff;
+    border-radius: 0 15px 15px 0;
+    box-shadow: inset 0 0 18px rgba(30, 58, 138, 0.15);
+    transition: margin-left 0.3s ease;
+}
+
+/* --- Headers --- */
+.admin-main-content h1,
+.admin-main-content h2 {
+    color: #1e3a8a;
+    font-weight: 800;
+    margin-bottom: 30px;
+}
+
+/* --- Tables --- */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1rem;
+}
+
+.admin-table th,
+.admin-table td {
+    border-bottom: 1px solid #cbd5e1;
+    padding: 14px 20px;
+    text-align: left;
+    color: #334155;
+}
+
+.admin-table th {
+    background-color: #3b82f6;
+    color: white;
+    font-weight: 700;
+}
+
+.admin-table tr:hover {
+    background-color: #e0e7ff;
+}
+
+/* --- Buttons --- */
+.btn {
+    background-color: #ec4899; /* pink */
+    color: white;
+    border: none;
+    padding: 12px 26px;
+    font-weight: 700;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.05rem;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+    user-select: none;
+}
+
+.btn:hover,
+.btn:focus {
+    background-color: #db2777;
+    outline: none;
+}
+
+/* --- Forms --- */
+.admin-form label {
+    font-weight: 600;
+    font-size: 1.05rem;
+    margin-bottom: 8px;
+    display: block;
+    color: #1e3a8a;
+}
+
+.admin-form input[type="text"],
+.admin-form input[type="file"],
+.admin-form textarea {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1.8px solid #94a3b8;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.admin-form input[type="text"]:focus,
+.admin-form input[type="file"]:focus,
+.admin-form textarea:focus {
+    border-color: #3b82f6;
+    outline: none;
+}
+
+/* --- Flash Messages --- */
+.flash-message {
+    max-width: 900px;
+    margin: 25px auto;
+    padding: 15px 20px;
+    border-radius: 12px;
+    font-weight: 700;
+    color: white;
+    text-align: center;
+}
+
+.flash-success {
+    background-color: #22c55e;
+}
+
+.flash-error {
+    background-color: #ef4444;
+}
+
+/* Responsive Sidebar */
+@media (max-width: 900px) {
+    .admin-sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        padding: 15px 20px;
+        flex-direction: row;
+        justify-content: space-around;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .admin-sidebar h2 {
+        display: none;
+    }
+
+    .admin-sidebar ul {
+        display: flex;
+        flex-direction: row;
+        gap: 15px;
+        margin: 0;
+    }
+
+    .admin-sidebar ul li {
+        margin: 0;
+    }
+
+    .admin-sidebar ul li a {
+        padding: 10px 12px;
+        font-size: 1rem;
+    }
+
+    .admin-main-content {
+        margin-left: 0;
+        padding: 25px 15px;
+        border-radius: 0;
+    }
+}
+
+/* ================= USER STYLE ================= */
+
+.user-container {
+    max-width: 720px;
+    margin: 50px auto;
+    background: #bfdbfe; /* biru muda */
+    padding: 35px 45px;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
+    text-align: center;
+    color: #1e293b;
+}
+
+.user-container h1 {
+    font-size: 2.8rem;
+    font-weight: 900;
+    margin-bottom: 25px;
+    color: #1e3a8a; /* biru tua */
+    user-select: none;
+}
+
+.user-container p {
+    font-size: 1.15rem;
+    margin-bottom: 35px;
+    line-height: 1.5;
+}
+
+.user-btn {
+    background-color: #ec4899; /* pink */
+    color: white;
+    border: none;
+    padding: 15px 35px;
+    font-weight: 700;
+    font-size: 1.25rem;
+    border-radius: 40px;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(236, 72, 153, 0.45);
+    transition: background-color 0.35s ease, transform 0.25s ease;
+    user-select: none;
+}
+
+.user-btn:hover,
+.user-btn:focus {
+    background-color: #db2777;
+    transform: scale(1.05);
+    outline: none;
+}
+
+/* Cute image styling */
+.user-photo {
+    max-width: 100%;
+    height: auto;
+    margin-top: 30px;
+    border-radius: 25px;
+    box-shadow: 0 8px 18px rgba(59, 130, 246, 0.4);
+}
+
+/* User form input */
+.user-form input[type="text"],
+.user-form input[type="file"],
+.user-form textarea {
+    width: 100%;
+    padding: 14px 18px;
+    border-radius: 15px;
+    border: 2px solid #3b82f6;
+    font-size: 1.15rem;
+    margin-bottom: 25px;
+    transition: border-color 0.3s ease;
+}
+
+.user-form input[type="text"]:focus,
+.user-form input[type="file"]:focus,
+.user-form textarea:focus {
+    border-color: #1e3a8a;
+    outline: none;
+}
+
+/* Responsive user container */
+@media (max-width: 650px) {
+    .user-container {
+        margin: 20px 15px;
+        padding: 25px 20px;
+        border-radius: 15px;
+    }
+    .user-container h1 {
+        font-size: 2.1rem;
+    }
+    .user-btn {
+        padding: 12px 25px;
+        font-size: 1.05rem;
+    }
+}

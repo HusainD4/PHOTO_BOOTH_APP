@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Ambil Foto</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>📸 Ambil Foto</h1>
+        <video id="webcam" width="640" height="480" autoplay></video>
+        <button id="capture">Ambil Foto</button>
+        <canvas id="canvas" style="display: none;"></canvas>
+        <script src="{{ url_for('static', filename='js/webcam.js') }}"></script>
+    </div>
+</body>
+</html>

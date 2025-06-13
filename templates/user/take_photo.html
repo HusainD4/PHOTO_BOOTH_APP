@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Ambil Foto - {{ template_name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .box {
+            flex: 1 1 400px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            min-width: 320px;
+        }
+
+        h1 {
+            margin-top: 0;
+            font-size: 24px;
+            color: #003366;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 10px;
+        }
+
+        video, canvas {
+            width: 100%;
+            max-width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            display: block;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 10px;
+            margin-right: 10px;
+            padding: 10px 20px;
+            background-color: #ff69b4;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #ff4a9e;
+        }
+
+        .preview-result img {
+            max-width: 300px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            display: block;
+        }
+
+        .preview-result h3 {
+            margin-top: 15px;
+            color: #003366;
+        }
+
+        .preview-result p a {
+            color: #ff69b4;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .preview-result p a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Kamera & Tombol -->
+    <div class="box">
+        <h1>Ambil Foto</h1>
+        <video id="video" autoplay playsinline></video>
+        <button class="btn" id="captureBtn">Ambil Foto</button>
+        <button class="btn" id="resetBtn">Reset</button>
+    </div>
+
+    <!-- Preview hasil -->
+    <div class="box">
+        <h1>Hasil Preview Kamera</h1>
+        <canvas id="templateCanvas" style="display:none;"></canvas>
+        <div class="preview-result" id="result"></div>
+    </div>
+</div>
+
+<script>
+    // Data posisi template dan nama template dari backend
+    const positions = {{ positions | tojson }};
+    const templateName = "{{ template_name }}";
+
+    const video = document.getElementById('video');
+    const captureBtn = document.getElementById('captureBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const canvas = document.getElementById('templateCanvas');
+    const ctx = canvas.getContext('2d');
+    const resultDiv = document.getElementById('result');
+
+    let photos = [];
+    let currentIndex = 0;
+
+    // Load gambar template
+    const templateImg = new Image();
+    templateImg.src = `/static/img/templates/${templateName}`;
+    templateImg.onload = () => {
+        drawTemplate();
+    };
+
+    // Akses kamera user
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then((stream) => {
+            video.srcObject = stream;
+        })
+        .catch(err => {
+            alert('Tidak bisa akses kamera: ' + err);
+        });
+
+    // Fungsi menggambar template dan foto yang sudah diambil ke canvas
+    function drawTemplate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(templateImg, 0, 0, canvas.width, canvas.height);
+
+        photos.forEach((photo, i) => {
+            const slot = positions[i];
+            if (slot && photo) {
+                ctx.drawImage(photo, slot.x, slot.y, slot.width, slot.height);
+            }
+        });
+    }
+
+    captureBtn.onclick = () => {
+        if (currentIndex >= positions.length) {
+            alert("Semua slot sudah terisi.");
+            return;
+        }
+
+        // Pastikan video sudah punya dimensi valid
+        if (video.videoWidth === 0 || video.videoHeight === 0) {
+            alert("Video belum siap, coba lagi sebentar.");
+            return;
+        }
+
+        // Buat canvas sementara untuk ambil frame dari video
+        const photoCanvas = document.createElement('canvas');
+        photoCanvas.width = video.videoWidth;
+        photoCanvas.height = video.videoHeight;
+        const photoCtx = photoCanvas.getContext('2d');
+        photoCtx.drawImage(video, 0, 0, photoCanvas.width, photoCanvas.height);
+
+        const img = new Image();
+        img.src = photoCanvas.toDataURL('image/png');
+        img.onload = () => {
+            photos[currentIndex] = img;
+            currentIndex++;
+            drawTemplate();
+
+            if (currentIndex === positions.length) {
+                uploadPhoto();
+            } else {
+                alert(`Foto ${currentIndex} berhasil diambil, lanjut ke slot berikutnya.`);
+            }
+        };
+    };
+
+    resetBtn.onclick = () => {
+        photos = [];
+        currentIndex = 0;
+        resultDiv.innerHTML = '';
+        drawTemplate();
+    };
+
+    // Fungsi upload foto ke server dalam format base64
+    function uploadPhoto() {
+        // Tampilkan loading sederhana
+        resultDiv.innerHTML = "<p>Mengunggah foto, mohon tunggu...</p>";
+
+        const photosBase64 = photos.map(img => img.src);
+
+        fetch('/user/save_photo', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                template_name: templateName,
+                photos: photosBase64
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
+                resultDiv.innerHTML = `
+                    <img src="${data.photo_url}" alt="Hasil Foto">
+                    <h3>QR Code Download</h3>
+                    <img src="${data.qr_code}" alt="QR Code">
+                    <p><a href="${data.photo_url}" download>Download Foto</a></p>
+                `;
+            } else {
+                alert('Gagal menyimpan foto: ' + data.message);
+                resultDiv.innerHTML = '';
+            }
+        })
+        .catch(err => {
+            alert('Terjadi error saat mengunggah: ' + err);
+            resultDiv.innerHTML = '';
+        });
+    }
+</script>
+
+</body>
+</html>

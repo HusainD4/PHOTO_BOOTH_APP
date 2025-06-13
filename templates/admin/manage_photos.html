@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <title>Kelola Foto</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+        }
+
+        .admin-main-content {
+            margin-left: 220px; /* space for sidebar */
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .photo-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .photo-list li {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 15px;
+            width: 220px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            word-wrap: break-word;
+        }
+
+        .photo-list img {
+            border-radius: 6px;
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        .photo-list p {
+            font-size: 14px;
+            font-weight: bold;
+            margin: 5px 0 10px;
+            color: #333;
+            word-break: break-word;
+            max-width: 100%;
+        }
+
+        .btn-pink {
+            background-color: #ff5e9c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-pink:hover {
+            background-color: #e04b89;
+        }
+        .admin-sidebar {
+            position: fixed;
+            width: 220px;
+            height: 100vh;
+            background-color: #2c3e50;
+            padding: 20px;
+            box-sizing: border-box;
+            color: white;
+            overflow-y: auto;
+        }
+
+        .admin-sidebar h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-weight: 700;
+            font-size: 1.4rem;
+        }
+
+        .admin-sidebar ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .admin-sidebar ul li {
+            margin-bottom: 15px;
+        }
+
+        .admin-sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .admin-sidebar ul li a:hover {
+            color: #e91e63;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Include -->
+    <div class="admin-sidebar">
+        <h2>Admin Menu</h2>
+        <ul>
+            <li><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('view_all_templates') }}">Kelola Template</a></li>
+            <li><a href="{{ url_for('upload_template') }}">Tambah Template</a></li>
+            <li><a href="{{ url_for('manage_photos') }}">Hasil Foto</a></li>
+            <li><a href="{{ url_for('view_user') }}">Lihat Halaman User</a></li>
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="admin-main-content">
+        <h1>Hasil Foto</h1>
+        <ul class="photo-list">
+            {% for photo in photos %}
+                <li>
+                    <img src="{{ url_for('static', filename='photos/' + photo.filename) }}" alt="{{ photo.name }}" width="200" />
+                    <p>{{ photo.name }}</p>
+                    <a class="btn-pink" href="{{ url_for('generate_qrcode', photo_id=photo.id) }}">QR Code Download</a>
+                </li>
+            {% else %}
+                <li>Tidak ada foto tersedia.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

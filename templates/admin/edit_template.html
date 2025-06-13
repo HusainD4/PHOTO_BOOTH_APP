@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <title>Edit Template</title>
+    <script src="{{ url_for('static', filename='js/template_editor.js') }}"></script>
+    <style>
+        /* style.css */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+        /* Sidebar */
+        .admin-sidebar {
+            position: fixed;
+            width: 220px;
+            height: 100vh;
+            background-color: #2c3e50;
+            padding: 20px;
+            box-sizing: border-box;
+            color: white;
+            overflow-y: auto;
+        }
+        .admin-sidebar h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-weight: 700;
+            font-size: 1.4rem;
+        }
+        .admin-sidebar ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .admin-sidebar ul li {
+            margin-bottom: 15px;
+        }
+        .admin-sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        .admin-sidebar ul li a:hover {
+            color: #e91e63;
+        }
+.admin-main-content {
+    margin-left: 250px; /* Asumsi sidebar lebarnya 250px */
+    padding: 20px 40px;
+    min-height: 100vh;
+    background-color: #fff;
+    box-sizing: border-box;
+}
+
+h1 {
+    margin-bottom: 20px;
+    font-weight: 700;
+    color: #222;
+}
+
+.canvas-box {
+    background-color: #ddd;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    padding: 15px;
+    width: fit-content;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.canvas-wrapper {
+    position: relative;
+    width: 1080px; /* sesuaikan dengan canvas width */
+    height: 1920px; /* sesuaikan dengan canvas height */
+    background-color: white;
+    border: 1px solid #aaa;
+    box-shadow: inset 0 0 10px #bbb;
+}
+
+canvas#templateCanvas {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    cursor: crosshair;
+}
+
+.btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 16px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-right: 10px;
+    user-select: none;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+.admin-form {
+    margin-top: 15px;
+}
+
+/* Responsive: sidebar dan konten bisa menyesuaikan */
+@media (max-width: 1200px) {
+    .admin-main-content {
+        margin-left: 0;
+        padding: 15px 20px;
+    }
+
+    .canvas-wrapper {
+        width: 100%;
+        height: auto;
+    }
+}
+
+    </style>
+</head>
+<body>
+    {% include 'admin/sidebar.html' with context %}
+
+    <div class="admin-main-content">
+        <h1>Edit Template: {{ template_name }}</h1>
+
+        <div class="canvas-box">
+            <div class="canvas-wrapper">
+                <canvas
+                    id="templateCanvas"
+                    width="1080"
+                    height="1920"
+                    data-template-name="{{ template_name }}">
+                </canvas>
+            </div>
+        </div>
+
+        <button id="addBox" class="btn" type="button">Tambah Area Kamera</button>
+
+        <form method="POST" action="" class="admin-form">
+            <input type="hidden" name="positions" id="positionsInput" />
+            <button type="submit" class="btn">Simpan Tata Letak</button>
+        </form>
+    </div>
+</body>
+</html>
