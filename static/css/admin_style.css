@@ -1,0 +1,436 @@
+/* === Global Reset & Body === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7fa;
+    color: #333;
+}
+
+/* === Sidebar === */
+.admin-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 240px;
+    height: 100vh;
+    background-color: #26354d;
+    padding: 25px 20px;
+    color: white;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.admin-sidebar h2 {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.admin-sidebar ul {
+    list-style: none;
+}
+
+.admin-sidebar ul li {
+    margin-bottom: 15px;
+}
+
+.admin-sidebar ul li a {
+    display: block;
+    padding: 10px 15px;
+    border-radius: 6px;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.3s, color 0.3s;
+}
+
+.admin-sidebar ul li a:hover,
+.admin-sidebar ul li a.active {
+    background-color: #e91e63;
+    color: #fff;
+}
+
+/* === Main Content === */
+.admin-main-content {
+    margin-left: 240px;
+    padding: 30px 40px;
+    min-height: 100vh;
+    background-color: #f9f9f9;
+    transition: margin-left 0.3s ease;
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+/* === Buttons === */
+.btn,
+button {
+    padding: 10px 18px;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+    margin-right: 10px;
+    user-select: none;
+}
+
+.btn-blue {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.btn-blue:hover {
+    background-color: #0056b3;
+}
+
+.btn-pink {
+    background-color: #e91e63;
+    color: #fff;
+}
+
+.btn-pink:hover {
+    background-color: #ad1457;
+}
+
+/* === Cards / Stats === */
+.stats-cards {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+}
+
+.card {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+    flex: 1;
+    min-width: 250px;
+    text-align: center;
+}
+
+.card h3 {
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.card p {
+    font-size: 26px;
+    font-weight: bold;
+    color: #222;
+}
+
+/* === Welcome Box === */
+.welcome-box {
+    background-color: #e0f7fa;
+    padding: 20px;
+    border-left: 6px solid #26c6da;
+    border-radius: 8px;
+    color: #007c91;
+    font-weight: 500;
+    margin-bottom: 30px;
+}
+
+/* === Charts === */
+.charts {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+}
+
+canvas {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    max-width: 100%;
+}
+
+/* === Template / Image Grid === */
+.template-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.template-list li {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.template-list li:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+
+.template-list img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    object-fit: contain;
+    margin-bottom: 12px;
+}
+
+.template-list p {
+    margin: 8px 0 12px;
+    font-weight: 600;
+    color: #333;
+    font-size: 15px;
+    word-break: break-word;
+}
+
+.template-actions {
+    font-size: 0.9rem;
+}
+
+.template-actions a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 600;
+    margin: 0 6px;
+    transition: color 0.3s ease;
+}
+
+.template-actions a:hover {
+    color: #e91e63;
+}
+
+
+/* === Table === */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    margin-top: 30px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+thead {
+    background-color: #e91e63;
+    color: white;
+}
+
+th, td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+tbody tr:hover {
+    background-color: #f4f4f4;
+}
+
+
+.photo-list li:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.photo-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.photo-list li {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  /* Atur tinggi tetap supaya tombolnya sejajar */
+  height: auto;
+}
+
+.photo-list img {
+  max-width: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+  height: 100;
+}
+
+.photo-list p {
+  margin: 10px 0 0;      /* Atur margin atas bawah agar tidak terlalu besar */
+  padding: 0 5px;         /* Sedikit padding supaya teks tidak nempel ke tepi */
+  text-align: center;     /* Center supaya teks rapi di tengah */
+  word-wrap: break-word;  /* Memaksa teks panjang untuk pindah baris */
+  overflow-wrap: break-word;
+  max-width: 100%;        /* Pastikan tidak melewati lebar container */
+  box-sizing: border-box; /* Pastikan padding masuk hitungan lebar */
+  white-space: normal;    /* Pastikan teks bisa wrap */
+  margin-bottom: 20px;
+  font-size: 8px;
+}
+
+.photo-list a.btn-pink {
+  margin-top: auto; /* Dorong tombol ke paling bawah */
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #fff;
+  background-color: #e91e63;
+  border: none;
+  border-radius: 6px;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: inline-block;
+}
+
+.photo-list a.btn-pink:hover {
+    background-color: #c2185b;
+}
+
+/* Pesan jika tidak ada foto */
+.photo-list li:empty,
+.photo-list li:only-child {
+    font-style: italic;
+    color: #777;
+    width: 100%;
+    text-align: center;
+    padding: 40px 0;
+}
+
+
+/* === Responsive === */
+@media (max-width: 768px) {
+    .admin-sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+
+    .admin-main-content {
+        margin-left: 0;
+        padding: 20px;
+    }
+
+    .stats-cards,
+    .charts {
+        flex-direction: column;
+    }
+
+    .template-list {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .template-list {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
+    }
+
+    .template-list li {
+        padding: 10px;
+    }
+
+    .template-list p {
+        font-size: 13px;
+    }
+}
+@media (max-width: 600px) {
+    .photo-list {
+        justify-content: center;
+    }
+    .photo-list li {
+        width: 100%;
+        max-width: 320px;
+    }
+}
+
+
+
+
+.admin-sidebar ul li.active > a {
+    background-color: #ff0099;
+    color: white;
+    font-weight: bold;
+    border-radius: 6px;
+    padding: 8px 12px;
+    display: block;
+}
+.admin-sidebar ul li.separator {
+    border-bottom: 2px solid #ff6f91;  /* garis batas */
+    margin-bottom: 15px;                /* jarak bawah */
+    padding-bottom: 10px;               /* jarak dalam bawah */
+}
+.admin-sidebar {
+    width: 220px;
+    background-color: #fefefe;
+    padding: 20px;
+    border-right: 2px solid #eee;
+    font-family: 'Segoe UI', sans-serif;
+    height: 100vh;
+}
+
+.admin-sidebar h2 {
+    font-size: 20px;
+    color: #ff6f91;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.admin-sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.admin-sidebar ul li {
+    margin-bottom: 10px;
+}
+
+.admin-sidebar ul li a {
+    display: block;
+    padding: 12px 15px;
+    text-decoration: none;
+    color: #333;
+    border-radius: 8px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.admin-sidebar ul li a:hover {
+    background-color: #ffe4ec;
+    color: #ff3f6c;
+}
+
+.admin-sidebar ul li.active a {
+    background-color: #ff6f91;
+    color: white;
+    font-weight: bold;
+}
+
+.admin-sidebar ul li.separator {
+    border-bottom: 2px solid #ff6f91;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}

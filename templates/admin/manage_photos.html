@@ -2,143 +2,250 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>Kelola Foto</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_style.css') }}" />
+    <!-- Tambahkan ini di bagian <head> -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f9f9f9;
-            margin: 0;
+        /* Modal overlay */
+        .modal {
+          display: none;
+          position: fixed;
+          z-index: 9999;
+          left: 0; top: 0;
+          width: 100%; height: 100%;
+          background-color: rgba(0,0,0,0.5);
+          justify-content: center;
+          align-items: center;
         }
-
-        .admin-main-content {
-            margin-left: 220px; /* space for sidebar */
-            padding: 20px;
+        .modal-content {
+          background-color: #fff;
+          padding: 20px 30px;
+          border-radius: 10px;
+          max-width: 400px;
+          width: 90%;
+          position: relative;
+          text-align: center;
         }
-
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
+        .close-btn {
+          position: absolute;
+          top: 10px; right: 15px;
+          font-size: 28px;
+          font-weight: bold;
+          color: #333;
+          cursor: pointer;
+          user-select: none;
         }
-
-        .photo-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            list-style-type: none;
-            padding: 0;
+        .close-btn:hover {
+          color: #e91e63;
         }
-
-        .photo-list li {
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            padding: 15px;
-            width: 220px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            word-wrap: break-word;
+        .btn-pink, .btn-delete {
+          padding: 8px 16px;
+          font-size: 0.9rem;
+          font-weight: 700;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+          color: #fff;
         }
-
-        .photo-list img {
-            border-radius: 6px;
-            max-width: 100%;
-            height: auto;
-            margin-bottom: 10px;
-        }
-
-        .photo-list p {
-            font-size: 14px;
-            font-weight: bold;
-            margin: 5px 0 10px;
-            color: #333;
-            word-break: break-word;
-            max-width: 100%;
-        }
-
         .btn-pink {
-            background-color: #ff5e9c;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-size: 14px;
-            transition: background-color 0.3s ease;
+          background-color: #e91e63;
         }
-
         .btn-pink:hover {
-            background-color: #e04b89;
+          background-color: #c2185b;
         }
-        .admin-sidebar {
-            position: fixed;
-            width: 220px;
-            height: 100vh;
-            background-color: #2c3e50;
-            padding: 20px;
-            box-sizing: border-box;
-            color: white;
-            overflow-y: auto;
+        .btn-delete {
+          background-color: #f44336;
+        }
+        .btn-delete:hover {
+          background-color: #b71c1c;
+        }
+        /* Table styling */
+        table.photo-table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 20px;
+          font-family: Arial, sans-serif;
+        }
+        table.photo-table th,
+        table.photo-table td {
+          border: 1px solid #ddd;
+          padding: 12px 15px;
+          text-align: center;
+          vertical-align: middle;
+        }
+        table.photo-table th {
+          background-color: #f5f5f5;
+          color: #e91e63;
+          font-weight: 700;
+        }
+        table.photo-table tbody tr:hover {
+          background-color: #faf0f6;
+        }
+        table.photo-table img {
+          max-width: 120px;
+          max-height: 90px;
+          border-radius: 6px;
+          object-fit: cover;
         }
 
-        .admin-sidebar h2 {
-            margin-top: 0;
-            margin-bottom: 20px;
-            font-weight: 700;
-            font-size: 1.4rem;
-        }
 
-        .admin-sidebar ul {
-            list-style: none;
-            padding-left: 0;
-        }
 
-        .admin-sidebar ul li {
-            margin-bottom: 15px;
-        }
 
-        .admin-sidebar ul li a {
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s ease;
-        }
-
-        .admin-sidebar ul li a:hover {
-            color: #e91e63;
-        }
     </style>
 </head>
 <body>
-    <!-- Sidebar Include -->
-    <div class="admin-sidebar">
-        <h2>Admin Menu</h2>
-        <ul>
-            <li><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
-            <li><a href="{{ url_for('view_all_templates') }}">Kelola Template</a></li>
-            <li><a href="{{ url_for('upload_template') }}">Tambah Template</a></li>
-            <li><a href="{{ url_for('manage_photos') }}">Hasil Foto</a></li>
-            <li><a href="{{ url_for('view_user') }}">Lihat Halaman User</a></li>
-            <li><a href="{{ url_for('logout') }}">Logout</a></li>
-        </ul>
-    </div>
+    {% include 'admin/sidebar.html' %}
 
-    <!-- Main Content -->
+
     <div class="admin-main-content">
         <h1>Hasil Foto</h1>
-        <ul class="photo-list">
-            {% for photo in photos %}
-                <li>
-                    <img src="{{ url_for('static', filename='photos/' + photo.filename) }}" alt="{{ photo.name }}" width="200" />
-                    <p>{{ photo.name }}</p>
-                    <a class="btn-pink" href="{{ url_for('generate_qrcode', photo_id=photo.id) }}">QR Code Download</a>
-                </li>
-            {% else %}
-                <li>Tidak ada foto tersedia.</li>
-            {% endfor %}
-        </ul>
+
+        {% if photos %}
+        <table class="photo-table">
+            <thead>
+                <tr>
+                    <th>Preview</th>
+                    <th>Nama Foto</th>
+                    <th>QR Code</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for photo in photos %}
+                <tr id="photo-row-{{ photo.id }}">
+                    <td>
+                        <img src="{{ url_for('static', filename='photos/' + photo.filename) }}" alt="{{ photo.name }}" />
+                    </td>
+                    <td>{{ photo.name }}</td>
+                    <td>
+                      <button class="btn-pink btn-open-modal" data-photo-id="{{ photo.id }}">
+                        QR Code Download
+                      </button>
+                    </td>
+                    <td>
+                      <button class="btn-delete" onclick="deletePhoto('{{ photo.id }}')">Hapus Foto</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <p>Tidak ada foto tersedia.</p>
+        {% endif %}
     </div>
+
+    <!-- Modal Popup -->
+    <div id="qrModal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h2>Download QR Code</h2>
+        <div id="qrCodeContainer">
+          <p>Loading QR Code...</p>
+        </div>
+      </div>
+    </div>
+
+<script>
+  function getQRCode(photoId) {
+    const modal = document.getElementById('qrModal');
+    const qrCodeContainer = document.getElementById('qrCodeContainer');
+
+    modal.style.display = 'flex';
+    qrCodeContainer.innerHTML = '<p>Loading QR Code...</p>';
+
+    fetch(`/admin/photos/${encodeURIComponent(photoId)}/qrcode`)
+      .then(response => {
+        if (!response.ok) throw new Error('Gagal memuat QR Code');
+        return response.blob();
+      })
+      .then(blob => {
+        const imgURL = URL.createObjectURL(blob);
+        qrCodeContainer.innerHTML = `<img src="${imgURL}" alt="QR Code" style="max-width:100%;">`;
+      })
+      .catch(() => {
+        qrCodeContainer.innerHTML = '<p>Gagal memuat QR Code.</p>';
+      });
+  }
+
+ function deletePhoto(photoId) {
+  Swal.fire({
+    title: 'Yakin ingin menghapus?',
+    text: "Foto akan dihapus secara permanen!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#e91e63',
+    cancelButtonColor: '#aaa',
+    confirmButtonText: 'Ya, hapus foto!',
+    cancelButtonText: 'Batal'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      fetch(`/admin/photos/${encodeURIComponent(photoId)}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': '{{ csrf_token() }}'   // ⬅️ Tambahkan DI SINI
+        }
+      })
+      .then(response => {
+        if (!response.ok) throw new Error('Gagal menghapus foto');
+        return response.json();
+      })
+      .then(data => {
+        Swal.fire({
+          title: 'Terhapus!',
+          text: 'Foto berhasil dihapus.',
+          icon: 'success',
+          timer: 2000,
+          showConfirmButton: false
+        });
+
+        const row = document.getElementById(`photo-row-${photoId}`);
+        if (row) row.remove();
+      })
+      .catch(err => {
+        Swal.fire({
+          title: 'Oops!',
+          text: 'Terjadi kesalahan saat menghapus foto.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+        console.error(err);
+      });
+    }
+  });
+}
+
+
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('qrModal');
+    const closeBtn = modal.querySelector('.close-btn');
+    const qrCodeContainer = document.getElementById('qrCodeContainer');
+
+    document.querySelectorAll('.btn-open-modal').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const photoId = btn.getAttribute('data-photo-id');
+        getQRCode(photoId);
+      });
+    });
+
+    closeBtn.addEventListener('click', () => {
+      modal.style.display = 'none';
+      qrCodeContainer.innerHTML = '';
+    });
+
+    window.addEventListener('click', (event) => {
+      if (event.target === modal) {
+        modal.style.display = 'none';
+        qrCodeContainer.innerHTML = '';
+      }
+    });
+  });
+</script>
 </body>
 </html>

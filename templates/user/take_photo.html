@@ -2,14 +2,176 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>Ambil Foto - {{ template_name }}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive_take.css') }}">
+<style>
+    /* Gaya normal untuk layar besar (desktop) */
+body {
+    margin: 0;
+    padding: 0;
+    background: url("../img/layer/latardepan.jpg") no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #fff;
+}
+
+.container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin: 0 40px;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.box {
+    flex: 1 1 380px;
+    background: #fff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    color: #000;
+    max-width: 500px;
+    min-width: 550px;
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #003366;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 8px;
+}
+
+video {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.btn {
+    display: inline-block;
+    margin-top: 15px;
+    margin-right: 10px;
+    padding: 10px 24px;
+    background-color: #ff69b4;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #ff4a9e;
+}
+
+.preview-container {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+#templateCanvas {
+    width: 347px;
+    max-width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    height: auto;
+}
+
+.preview-result {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 220px;
+}
+
+.preview-result img.result-photo,
+.preview-result img.qr-code {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+nav {
+    background: linear-gradient(45deg, #ff6ec4, #7873f5);
+    padding: 15px 30px;
+    text-align: center;
+    border-radius: 0 0 15px 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    position: relative;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 20px;
+    font-weight: 700;
+    font-size: 1.2rem;
+    position: relative;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+nav a:hover {
+    color: #fff8f0;
+    transform: scale(1.1) rotate(-3deg);
+}
+
+nav a::after {
+    content: "✨";
+    position: absolute;
+    right: -18px;
+    top: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease, right 0.3s ease;
+}
+
+nav a:hover::after {
+    opacity: 1;
+    right: -8px;
+}
+
+nav .logo {
+    position: absolute;
+    left: 20px;
+    top: 10px;
+    height: 32px;
+    width: auto;
+}
+
+.loading-logo {
+    width: 70px;
+    height: 60px;
+    animation: spin 2s linear infinite;
+    display: block;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+</style>
+
+
+    <!-- <style>
+        /* CSS tetap seperti yang kamu punya */
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #f0f8ff;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            background: url("{{ url_for('static', filename='img/layer/latardepan.jpg') }}") no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #fff;
         }
 
         .container {
@@ -25,6 +187,7 @@
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             min-width: 320px;
+            color: #000; /* teks hitam di dalam box putih */
         }
 
         h1 {
@@ -35,13 +198,15 @@
             padding-bottom: 10px;
         }
 
-        video, canvas {
-            width: 100%;
+        video {
+            width: 1920px;  
+            height: 600px;
             max-width: 100%;
             border: 1px solid #ccc;
             border-radius: 8px;
             display: block;
         }
+
 
         .btn {
             display: inline-block;
@@ -61,47 +226,143 @@
             background-color: #ff4a9e;
         }
 
-        .preview-result img {
-            max-width: 300px;
-            margin: 10px 0;
+        .preview-container {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start; /* supaya atasnya rata */
+        }
+
+        #templateCanvas {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            width: 400px;  /* ukuran kecil */
+            height: auto;  /* proporsional */
+        }
+
+        .preview-result {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 200px; /* supaya nggak terlalu lebar */
+        }
+
+        .preview-result img.result-photo,
+        .preview-result img.qr-code {
+            max-width: 100%;
             border-radius: 8px;
             border: 1px solid #ddd;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-logo {
+            width: 70px; /* sesuaikan ukuran */
+            height: 60px;
+            animation: spin 2s linear infinite;
             display: block;
+            margin: 20px auto;
         }
 
-        .preview-result h3 {
-            margin-top: 15px;
-            color: #003366;
+        nav {
+            background: linear-gradient(45deg, #ff6ec4, #7873f5);
+            padding: 12px 25px;
+            text-align: center;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            user-select: none;
+            transition: background-color 0.3s ease;
         }
 
-        .preview-result p a {
-            color: #ff69b4;
+        nav:hover {
+            background: linear-gradient(45deg, #ff4a9e, #5f56d3);
+        }
+
+        nav a {
+            color: #fff;
             text-decoration: none;
-            font-weight: 600;
+            margin: 0 18px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            position: relative;
+            display: inline-block;
+            transition: transform 0.3s ease, color 0.3s ease;
+            cursor: pointer;
         }
-        .preview-result p a:hover {
-            text-decoration: underline;
+
+        nav a::after {
+            content: "✨";
+            position: absolute;
+            right: -20px;
+            top: 0;
+            opacity: 0;
+            transition: opacity 0.3s ease, right 0.3s ease;
+            font-size: 1rem;
         }
-    </style>
+
+        nav a:hover {
+            color: #fff8f0;
+            transform: scale(1.15) rotate(-5deg);
+        }
+
+        nav a:hover::after {
+            opacity: 1;
+            right: -10px;
+        }
+
+        .swal2-timer-progress-bar {
+            right: auto !important;
+            left: 10 !important;
+    }
+
+            /* Logo di navbar kiri */
+        nav .logo {
+            position: absolute;
+            left: 15px;
+            top: 8px;
+            height: 30px;
+            width: auto;
+        }
+    </style> -->
 </head>
 <body>
+    
+    <nav style="margin-bottom: 30px;">
+        <img src="{{ url_for('static', filename='img/layer/HsnStudio.png') }}" alt="Hsn Studio Logo" class="logo">
 
-<div class="container">
+        <a href="{{ url_for('index') }}">Template</a>
+        <a href="{{ url_for('about') }}">About Apps</a>
+        <a href="{{ url_for('gallery') }}">Gallery</a>
+    </nav>
+
+<div class="container" style="margin-left: 20px; margin-right: 20px;">
     <!-- Kamera & Tombol -->
     <div class="box">
         <h1>Ambil Foto</h1>
-        <video id="video" autoplay playsinline></video>
-        <button class="btn" id="captureBtn">Ambil Foto</button>
-        <button class="btn" id="resetBtn">Reset</button>
+        <div id="cameraSelectContainer" style="margin-bottom: 10px;"></div>
+
+        <div id="videoContainer" style="position: relative; display: inline-block;">
+            <video id="video" autoplay playsinline></video>
+            <!-- nanti countdown akan dimasukkan di sini -->
+            <button class="btn" id="captureBtn">Ambil Foto</button>
+            <button class="btn" id="resetBtn">Reset</button>
+        </div>
+
     </div>
 
     <!-- Preview hasil -->
     <div class="box">
-        <h1>Hasil Preview Kamera</h1>
-        <canvas id="templateCanvas" style="display:none;"></canvas>
-        <div class="preview-result" id="result"></div>
+        <h1>Hasil Foto</h1>
+        <div class="preview-container">
+            <canvas id="templateCanvas"></canvas>
+            <div class="preview-result" id="result"></div>
+        </div>
     </div>
 </div>
+<script src="/static/js/opsi_camera.js"></script>
 
 <script>
     // Data posisi template dan nama template dari backend
@@ -121,8 +382,12 @@
     // Load gambar template
     const templateImg = new Image();
     templateImg.src = `/static/img/templates/${templateName}`;
+
     templateImg.onload = () => {
+        canvas.width = templateImg.width;
+        canvas.height = templateImg.height;
         drawTemplate();
+        canvas.style.display = "block";
     };
 
     // Akses kamera user
@@ -134,51 +399,112 @@
             alert('Tidak bisa akses kamera: ' + err);
         });
 
-    // Fungsi menggambar template dan foto yang sudah diambil ke canvas
     function drawTemplate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(templateImg, 0, 0, canvas.width, canvas.height);
-
         photos.forEach((photo, i) => {
             const slot = positions[i];
             if (slot && photo) {
                 ctx.drawImage(photo, slot.x, slot.y, slot.width, slot.height);
             }
         });
+        ctx.drawImage(templateImg, 0, 0, canvas.width, canvas.height);
     }
 
     captureBtn.onclick = () => {
         if (currentIndex >= positions.length) {
-            alert("Semua slot sudah terisi.");
+            Swal.fire({
+                icon: 'info',
+                title: 'Slot Penuh!',
+                text: 'Semua area kamera sudah terisi.',
+                confirmButtonColor: '#ff69b4'
+            });
             return;
         }
 
-        // Pastikan video sudah punya dimensi valid
         if (video.videoWidth === 0 || video.videoHeight === 0) {
-            alert("Video belum siap, coba lagi sebentar.");
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops!',
+                text: 'Video belum siap. Coba lagi sebentar ya!',
+                confirmButtonColor: '#ff69b4'
+            });
             return;
         }
 
-        // Buat canvas sementara untuk ambil frame dari video
-        const photoCanvas = document.createElement('canvas');
-        photoCanvas.width = video.videoWidth;
-        photoCanvas.height = video.videoHeight;
-        const photoCtx = photoCanvas.getContext('2d');
-        photoCtx.drawImage(video, 0, 0, photoCanvas.width, photoCanvas.height);
+        // Hide tombol capture dan buat elemen countdown
+        captureBtn.style.display = 'none';
+        resetBtn.style.display = 'none';
 
-        const img = new Image();
-        img.src = photoCanvas.toDataURL('image/png');
-        img.onload = () => {
-            photos[currentIndex] = img;
-            currentIndex++;
-            drawTemplate();
+        // Dapatkan container video
+        const videoContainer = document.getElementById('videoContainer');
 
-            if (currentIndex === positions.length) {
-                uploadPhoto();
+        const countdownDiv = document.createElement('div');
+        countdownDiv.style.position = 'absolute';
+        countdownDiv.style.top = '50%';
+        countdownDiv.style.left = '50%';
+        countdownDiv.style.transform = 'translate(-50%, -50%)';
+        countdownDiv.style.fontSize = '5rem';
+        countdownDiv.style.color = '#ffffff';  
+        countdownDiv.style.fontWeight = 'bold';
+        countdownDiv.style.zIndex = '9999';
+        countdownDiv.style.textShadow = '0 0 10px #ff69b4';
+
+        // Masukkan countdownDiv ke dalam videoContainer (bukan body)
+        videoContainer.appendChild(countdownDiv);
+
+
+        let countdown = 5;
+        countdownDiv.textContent = countdown;
+
+        const intervalId = setInterval(() => {
+            countdown--;
+            if (countdown > 0) {
+                countdownDiv.textContent = countdown;
             } else {
-                alert(`Foto ${currentIndex} berhasil diambil, lanjut ke slot berikutnya.`);
+                clearInterval(intervalId);
+                countdownDiv.remove();
+
+                // Ambil foto setelah countdown selesai
+                const photoCanvas = document.createElement('canvas');
+                photoCanvas.width = video.videoWidth;
+                photoCanvas.height = video.videoHeight;
+                const photoCtx = photoCanvas.getContext('2d');
+                photoCtx.drawImage(video, 0, 0, photoCanvas.width, photoCanvas.height);
+
+                const img = new Image();
+                img.src = photoCanvas.toDataURL('image/png');
+                img.onload = () => {
+                    photos[currentIndex] = img;
+                    currentIndex++;
+                    drawTemplate();
+
+                if (currentIndex === positions.length) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Sesi Foto Selesai!',
+                        text: 'Semua slot sudah terisi. Foto akan segera diupload.',
+                        confirmButtonColor: '#ff69b4',
+                        timer: 2500,
+                        showConfirmButton: false
+                    }).then(() => {
+                        uploadPhoto();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Foto Diambil!',
+                        text: `Slot ${currentIndex} berhasil diisi. Lanjut ke slot berikutnya.`,
+                        confirmButtonColor: '#ff69b4',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
+                };
+
+                captureBtn.style.display = 'inline-block';
+                resetBtn.style.display = 'inline-block';
             }
-        };
+        }, 1000);
     };
 
     resetBtn.onclick = () => {
@@ -186,18 +512,31 @@
         currentIndex = 0;
         resultDiv.innerHTML = '';
         drawTemplate();
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil di reset!',
+            timer: 1000,
+            showConfirmButton: false,
+            timerProgressBar: true
+        });
     };
 
-    // Fungsi upload foto ke server dalam format base64
     function uploadPhoto() {
-        // Tampilkan loading sederhana
-        resultDiv.innerHTML = "<p>Mengunggah foto, mohon tunggu...</p>";
+        resultDiv.innerHTML = `
+            <img src="/static/img/layer/HsnStudio.png" alt="Loading" class="loading-logo" />
+            <p style="text-align:center;">Mengunggah foto, mohon tunggu...</p>
+        `;
 
         const photosBase64 = photos.map(img => img.src);
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
         fetch('/user/save_photo', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
             body: JSON.stringify({
                 template_name: templateName,
                 photos: photosBase64
@@ -206,19 +545,59 @@
         .then(res => res.json())
         .then(data => {
             if (data.status === 'success') {
-                resultDiv.innerHTML = `
-                    <img src="${data.photo_url}" alt="Hasil Foto">
-                    <h3>QR Code Download</h3>
-                    <img src="${data.qr_code}" alt="QR Code">
-                    <p><a href="${data.photo_url}" download>Download Foto</a></p>
-                `;
+                // Delay 3 detik sebelum tampilkan alert & hasil
+                setTimeout(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: 'Foto berhasil disimpan dan QR Code sudah dibuat.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        timerProgressBar: true
+                    });
+
+                    resultDiv.innerHTML = `
+                        <div class="preview-result">
+                            <div>
+
+                                <img class="qr-code" src="${data.qr_code}" alt="QR Code">
+                                <p>
+                                    <a href="${data.photo_url}" download style="
+                                        background-color: #ff69b4;
+                                        color: white;
+                                        padding: 3px 32px;
+                                        text-decoration: none;
+                                        border: none;
+                                        border-radius: 5px;
+                                        font-weight: bold;
+                                        display: inline-block;
+                                        transition: background-color 0.3s;
+                                    " onmouseover="this.style.backgroundColor='#ff1493'" onmouseout="this.style.backgroundColor='#ff69b4'">
+                                        Download Foto
+                                    </a>
+                                </p>
+
+                            </div>
+                        </div>
+                    `;
+                }, 3000);
             } else {
-                alert('Gagal menyimpan foto: ' + data.message);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    text: data.message || 'Tidak bisa menyimpan foto.',
+                    confirmButtonColor: '#ff69b4'
+                });
                 resultDiv.innerHTML = '';
             }
         })
         .catch(err => {
-            alert('Terjadi error saat mengunggah: ' + err);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error Upload!',
+                text: err.message || 'Terjadi kesalahan saat unggah.',
+                confirmButtonColor: '#ff69b4'
+            });
             resultDiv.innerHTML = '';
         });
     }

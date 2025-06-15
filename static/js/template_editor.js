@@ -220,8 +220,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function drawCanvas() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(templateImg, 0, 0, canvas.width, canvas.height);
 
+        // Gambar kotak kamera dulu (background)
         boxes.forEach((box, index) => {
             ctx.beginPath();
             ctx.lineWidth = 2;
@@ -235,7 +235,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             drawResizeHandle(box.x + box.width, box.y + box.height);
         });
+
+        // Gambar template di atas dengan opacity agar kotak tetap terlihat
+        ctx.globalAlpha = 0.7; // atur transparansi template (0.0 - 1.0)
+        ctx.drawImage(templateImg, 0, 0, canvas.width, canvas.height);
+        ctx.globalAlpha = 1.0; // reset alpha ke default
     }
+
 
     function drawResizeHandle(x, y) {
         ctx.fillStyle = 'blue';

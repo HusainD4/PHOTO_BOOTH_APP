@@ -4,125 +4,166 @@
     <meta charset="UTF-8" />
     <title>Edit Template</title>
     <script src="{{ url_for('static', filename='js/template_editor.js') }}"></script>
-    <style>
-        /* style.css */
+    <script src="{{ url_for('static', filename='js/sidebar.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_style.css') }}" />
 
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f9f9f9;
-    margin: 0;
-    padding: 0;
-    color: #333;
-}
-        /* Sidebar */
-        .admin-sidebar {
-            position: fixed;
-            width: 220px;
-            height: 100vh;
-            background-color: #2c3e50;
-            padding: 20px;
-            box-sizing: border-box;
-            color: white;
-            overflow-y: auto;
-        }
-        .admin-sidebar h2 {
-            margin-top: 0;
-            margin-bottom: 20px;
-            font-weight: 700;
-            font-size: 1.4rem;
-        }
-        .admin-sidebar ul {
-            list-style: none;
-            padding-left: 0;
-        }
-        .admin-sidebar ul li {
-            margin-bottom: 15px;
-        }
-        .admin-sidebar ul li a {
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s ease;
-        }
-        .admin-sidebar ul li a:hover {
-            color: #e91e63;
-        }
-.admin-main-content {
-    margin-left: 250px; /* Asumsi sidebar lebarnya 250px */
-    padding: 20px 40px;
-    min-height: 100vh;
-    background-color: #fff;
-    box-sizing: border-box;
-}
+<style>
+    /* Tombol Umum */
+    .btn {
+        
+        display: inline-block;
+        padding: 10px 14px;
+        background-color: #ff69b4;
+        color: white;
+        font-size: 1rem;
+        font-weight: bold;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        white-space: nowrap;
+    }
 
-h1 {
-    margin-bottom: 20px;
-    font-weight: 700;
-    color: #222;
-}
+    .btn:hover {
+        background-color: #ff4a9e;
+        transform: scale(1.05);
+    }
 
-.canvas-box {
-    background-color: #ddd;
-    border: 2px solid #ccc;
-    border-radius: 6px;
-    padding: 15px;
-    width: fit-content;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
+    /* Tombol Tambah Area Kamera */
+    #addBox {
+        background-color: #6c5ce7;
+    }
 
-.canvas-wrapper {
-    position: relative;
-    width: 1080px; /* sesuaikan dengan canvas width */
-    height: 1920px; /* sesuaikan dengan canvas height */
-    background-color: white;
-    border: 1px solid #aaa;
-    box-shadow: inset 0 0 10px #bbb;
-}
+    #addBox:hover {
+        background-color: #5a4bcf;
+    }
 
-canvas#templateCanvas {
-    display: block;
-    max-width: 100%;
-    height: auto;
-    border-radius: 4px;
-    cursor: crosshair;
-}
+    /* Form Admin untuk Simpan Posisi */
+    .admin-form {
+        margin-top: 0; /* hilangkan margin atas karena tombol sudah ada gap */
+        display: flex;
+        gap: 15px;
+        align-items: center;
+    }
 
-.btn {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 10px 16px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-right: 10px;
-    user-select: none;
-}
+    .admin-form .btn {
+        background-color: #00b894;
+        padding: 10px 25px;
+    }
 
-.btn:hover {
-    background-color: #0056b3;
-}
+    .admin-form .btn:hover {
+        background-color: #009973;
+    }
 
-.admin-form {
-    margin-top: 15px;
-}
-
-/* Responsive: sidebar dan konten bisa menyesuaikan */
-@media (max-width: 1200px) {
+    /* Container utama halaman edit template */
     .admin-main-content {
-        margin-left: 0;
-        padding: 15px 20px;
+        max-width: 1100px;
+        margin: 30px;
+        margin-right: 0px;
+        margin-left: 250px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        color: #fff;
+        text-align: center;
     }
 
+    /* Judul halaman */
+    .admin-main-content h1 {
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+        color: #ff69b4;
+        font-weight: bold;
+    }
+
+    /* Bungkus kanvas */
+    .canvas-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow-x: auto;
+        padding: 10px;
+    }
+
+    /* Pembungkus ekstra jika diperlukan scroll atau efek border */
     .canvas-wrapper {
-        width: 100%;
-        height: auto;
+        border: 2px solid #ff69b4;
+        border-radius: 10px;
+        background: #ffffff08;
+        padding: 10px;
+        box-shadow: 0 0 10px #ff69b450;
     }
-}
 
-    </style>
+    /* Kanvas template */
+    #templateCanvas {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        background-color: #fff;
+    }
+
+    /* Layout utama edit */
+    .edit-layout {
+        display: flex;
+        gap: 30px;
+        align-items: flex-start;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .preview-area {
+        flex: 1 1 650px; /* Lebar minimal 650px, tumbuh maksimal */
+        max-width: 70%;
+        min-width: 320px;
+    }
+
+    .controls-area {
+        flex: 0 0 300px; /* Lebar tetap 300px untuk ruang tombol */
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        justify-content: flex-start;
+        align-items: flex-start;
+    }
+
+    /* Responsif untuk layar kecil */
+    @media (max-width: 900px) {
+        .edit-layout {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .preview-area, .controls-area {
+            max-width: 100%;
+            flex: none;
+        }
+
+        .controls-area {
+            width: 100%;
+            max-width: 350px;
+            align-items: center; /* tengah tombol di layar kecil */
+        }
+
+        /* Buat tombol di form dan tombol tambah jadi vertikal */
+        .admin-form {
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .admin-form .btn {
+            width: 100%;
+            text-align: center;
+        }
+
+        #addBox {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
 </head>
 <body>
     {% include 'admin/sidebar.html' with context %}
@@ -130,23 +171,33 @@ canvas#templateCanvas {
     <div class="admin-main-content">
         <h1>Edit Template: {{ template_name }}</h1>
 
-        <div class="canvas-box">
-            <div class="canvas-wrapper">
-                <canvas
-                    id="templateCanvas"
-                    width="1080"
-                    height="1920"
-                    data-template-name="{{ template_name }}">
-                </canvas>
+        <div class="edit-layout">
+            <!-- Preview canvas di kiri -->
+            <div class="preview-area">
+                <div class="canvas-box">
+                    <div class="canvas-wrapper">
+                        <canvas
+                            id="templateCanvas"
+                            width="1080"
+                            height="1920"
+                            data-template-name="{{ template_name }}">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kontrol tombol dan form di kanan -->
+            <div class="controls-area">
+                
+                <button id="addBox" class="btn" type="button" style="margin-top: 20px;">Tambah Area Kamera</button>
+                
+                <form method="POST" action="" class="admin-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="positions" id="positionsInput" />
+                    <button type="submit" class="btn">Simpan Tata Letak</button>
+                </form>
             </div>
         </div>
-
-        <button id="addBox" class="btn" type="button">Tambah Area Kamera</button>
-
-        <form method="POST" action="" class="admin-form">
-            <input type="hidden" name="positions" id="positionsInput" />
-            <button type="submit" class="btn">Simpan Tata Letak</button>
-        </form>
     </div>
 </body>
 </html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Tentang Aplikasi</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url("{{ url_for('static', filename='img/layer/latardepan.jpg') }}") no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+        }
+
+        nav {
+            background: linear-gradient(45deg, #ff6ec4, #7873f5);
+            padding: 12px 25px;
+            text-align: center;
+            border-radius: 0 0 0px 0px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            user-select: none;
+            transition: background-color 0.3s ease;
+            position: relative;
+        }
+
+        nav:hover {
+            background: linear-gradient(45deg, #ff4a9e, #5f56d3);
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 18px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            position: relative;
+            display: inline-block;
+            transition: transform 0.3s ease, color 0.3s ease;
+            cursor: pointer;
+        }
+
+        nav a::after {
+            content: "✨";
+            position: absolute;
+            right: -20px;
+            top: 0;
+            opacity: 0;
+            transition: opacity 0.3s ease, right 0.3s ease;
+            font-size: 1rem;
+        }
+
+        nav a:hover {
+            color: #fff8f0;
+            transform: scale(1.15) rotate(-5deg);
+        }
+
+        nav a:hover::after {
+            opacity: 1;
+            right: -10px;
+        }
+
+        nav .logo {
+            position: absolute;
+            left: 15px;
+            top: 8px;
+            height: 30px;
+            width: auto;
+        }
+
+        .overlay {
+            background: rgba(0, 0, 0, 0.7);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .box-section {
+            background: rgba(255, 255, 255, 0.07);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+        }
+
+        .box-section:hover {
+            transform: scale(1.01);
+        }
+
+        h1 {
+            color: #e91e63;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .flex-box {
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .creator, .qris {
+            flex: 1 1 45%;
+            text-align: center;
+        }
+
+        .creator img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 3px solid #e91e63;
+            object-fit: cover;
+            box-shadow: 0 0 15px #e91e63aa;
+            margin-bottom: 10px;
+            margin-top: 80px;
+        }
+
+        .creator h2 {
+            font-size: 1.3rem;
+            color: #ff69b4;
+            margin: 10px 0 5px;
+        }
+
+        .creator p {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #ffc1e3;
+        }
+
+        .qris img {
+            width: 200px;
+            max-width: 100%;
+            border-radius: 12px;
+            border: 2px solid #ff69b4;
+            box-shadow: 0 0 15px #ff69b470;
+        }
+
+        .qris h2 {
+            color: #ff69b4;
+            margin-bottom: 10px;
+        }
+
+        .qris p {
+            font-weight: bold;
+            color: #ffc1e3;
+        }
+
+        .version {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #ffb6c1;
+            font-style: italic;
+        }
+
+        a.back {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #ffc1e3;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a.back:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .flex-box {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .creator, .qris {
+                flex: 1 1 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav>
+        <img src="{{ url_for('static', filename='img/layer/HsnStudio.png') }}" alt="Hsn Studio Logo" class="logo">
+        <a href="{{ url_for('index') }}">Template</a>
+        <a href="{{ url_for('gallery') }}">Gallery</a>
+        <a href="{{ url_for('about') }}">About Apps</a>
+    </nav>
+
+    <div class="overlay">
+        <div class="container">
+
+            <!-- Deskripsi -->
+            <div class="box-section">
+                <h1>Tentang Aplikasi Photo Booth</h1>
+                <p>
+                    Aplikasi ini dirancang untuk memudahkan pengguna dalam mengambil dan menggabungkan foto dengan berbagai template menarik.
+                    Dengan fitur QR Code, hasil foto dapat dibagikan dan diakses dengan mudah.
+                </p>
+                <p>
+                    Cocok digunakan untuk event seperti ulang tahun, pernikahan, wisuda, atau booth acara lainnya.
+                </p>
+            </div>
+            <div class="box-section">
+                <h1>Pencipta Aplikasi</h1>
+            </div>
+
+            <!-- Foto Owner & QRIS -->
+            <div class="box-section flex-box">
+                
+
+                <!-- Owner -->
+                <div class="creator">
+                    <img src="{{ url_for('static', filename='img/layer/Owner.png') }}" alt="Foto Husain Mulyansyah">
+                    <h2>Husain Mulyansyah</h2>
+                    <p>Owner Hsn Studio</p>
+                </div>
+
+                <!-- QRIS -->
+                <div class="qris">
+                    <img src="{{ url_for('static', filename='img/layer/qris.png') }}" alt="QRIS Dukungan">
+                    <h2>Dukung Saya 💖</h2>
+                    <p>Dukung saya dengan kirimkan melalui QRIS ini:</p>
+                </div>
+            </div>
+
+            <!-- Versi Aplikasi -->
+            <div class="box-section version">
+                Versi Aplikasi: 12.0.2.1
+            </div>
+
+            <!-- Tombol Kembali -->
+            <a href="{{ url_for('index') }}" class="back">← Kembali ke Halaman Utama</a>
+        </div>
+    </div>
+</body>
+</html>

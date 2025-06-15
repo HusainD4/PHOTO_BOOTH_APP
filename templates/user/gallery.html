@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <title>Galeri Foto</title>
+    <style>
+        /* Reset margin & padding, hilangkan scroll horizontal */
+        html, body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url("{{ url_for('static', filename='img/layer/latardepan.jpg') }}") no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+        }
+
+        nav {
+            background: linear-gradient(45deg, #ff6ec4, #7873f5);
+            padding: 12px 25px;
+            text-align: center;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            user-select: none;
+            transition: background-color 0.3s ease;
+            position: relative; /* untuk logo absolute positioning */
+        }
+
+        nav:hover {
+            background: linear-gradient(45deg, #ff4a9e, #5f56d3);
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 18px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            position: relative;
+            display: inline-block;
+            transition: transform 0.3s ease, color 0.3s ease;
+            cursor: pointer;
+        }
+
+        nav a::after {
+            content: "✨";
+            position: absolute;
+            right: -20px;
+            top: 0;
+            opacity: 0;
+            transition: opacity 0.3s ease, right 0.3s ease;
+            font-size: 1rem;
+        }
+
+        nav a:hover {
+            color: #fff8f0;
+            transform: scale(1.15) rotate(-5deg);
+        }
+
+        nav a:hover::after {
+            opacity: 1;
+            right: -10px;
+        }
+
+        nav .logo {
+            position: absolute;
+            left: 15px;
+            top: 8px;
+            height: 30px;
+            width: auto;
+        }
+
+        .overlay {
+            min-height: 100vh;
+            padding: 40px 0 0 0; /* hilangkan padding samping supaya lebar penuh */
+        }
+
+
+
+        h1 {
+            text-align: center;
+            color: #e91e63;
+            margin-bottom: 30px;
+        }
+
+        /* Scroll container melebar penuh viewport, tanpa padding */
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 0; /* hilangkan padding kiri-kanan */
+        }
+
+        .scroll-container {
+            width: 100vw;      /* full viewport width */
+            overflow: hidden;
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+        }
+
+
+        /* Galeri horizontal, nowrap, animasi scroll */
+        .gallery {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 25px;
+            width: max-content; /* agar lebarnya mengikuti isi */
+            animation: scroll-left 30s linear infinite;
+        }
+
+        @keyframes scroll-left {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .gallery img {
+            border-radius: 8px;
+            max-width: 350px; /* naikin ukuran gambar dari 200px ke 350px */
+            height: auto;
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+            display: block;
+        }
+
+
+        .gallery img:hover {
+            transform: scale(1.05);
+        }
+
+        a.back {
+            display: inline-block;
+            margin-top: 30px;
+            color: #ffc1e3;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a.back:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav>
+        <img src="{{ url_for('static', filename='img/layer/HsnStudio.png') }}" alt="Hsn Studio Logo" class="logo" />
+        <a href="{{ url_for('index') }}">Template</a>
+        <a href="{{ url_for('gallery') }}">Gallery</a>
+        <a href="{{ url_for('about') }}">About Apps</a>
+    </nav>
+
+    <div class="overlay">
+        <div class="container">
+            <h1>Galeri Hasil Foto</h1>
+        </div>
+
+        <!-- Scroll container keluar dari .container supaya full width -->
+        <div class="scroll-container">
+            <div class="gallery">
+                {% for photo in photos %}
+                    <a href="{{ url_for('view_photo', photo_id=photo) }}" target="_blank">
+                        <img src="{{ url_for('static', filename='photos/' + photo) }}" alt="{{ photo }}" />
+                    </a>
+                {% endfor %}
+                {% for photo in photos %}
+                    <a href="{{ url_for('view_photo', photo_id=photo) }}" target="_blank">
+                        <img src="{{ url_for('static', filename='photos/' + photo) }}" alt="{{ photo }}" />
+                    </a>
+                {% endfor %}
+                {% for photo in photos %}
+                    <a href="{{ url_for('view_photo', photo_id=photo) }}" target="_blank">
+                        <img src="{{ url_for('static', filename='photos/' + photo) }}" alt="{{ photo }}" />
+                    </a>
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
+</body>
+
+</html>

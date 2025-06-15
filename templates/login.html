@@ -4,37 +4,119 @@
     <meta charset="UTF-8" />
     <title>Login Admin</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 50px;}
-        form { background: white; padding: 20px; max-width: 300px; margin: auto; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);}
-        input[type="text"], input[type="password"] {
-            width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px;
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #2457ff 0%, #ff10cf 100%);
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+
+        .login-wrapper {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+            width: 350px;
+            text-align: center;
+            position: relative;
+        }
+
+        h2 {
+            color: #4a2fbd;
+            font-weight: 700;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        input[type="text"], input[type="password"], input[type="submit"] {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 1rem;
+            border-radius: 30px;
+            border: 2px solid #4a2fbd;
+            outline: none;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: #6c49d7;
+            box-shadow: 0 0 8px #6c49d7;
+        }
+
         input[type="submit"] {
-            background: #007bff; color: white; border: none; padding: 10px; width: 100%; border-radius: 4px;
+            background-color: #4a2fbd;
+            color: white;
+            font-weight: 600;
             cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 10px rgba(74,47,189,0.6);
+            transition: background-color 0.3s ease;
         }
+
         input[type="submit"]:hover {
-            background: #0056b3;
+            background-color: #6c49d7;
+            box-shadow: 0 6px 15px rgba(108,73,215,0.8);
         }
-        .flash {color: red; text-align: center;}
+
+        .flash {
+            color: #d32f2f;
+            background: #ffcdd2;
+            padding: 12px 20px;
+            margin: 15px 0 20px;
+            border-radius: 15px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(211,47,47,0.3);
+            user-select: none;
+            max-width: 350px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Responsive */
+        @media(max-width: 400px) {
+            .login-wrapper {
+                width: 90%;
+                padding: 30px 20px;
+            }
+        }
     </style>
 </head>
 <body>
-    <h2 style="text-align:center;">Login Admin</h2>
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <div class="flash">
-          {% for message in messages %}
-            <p>{{ message }}</p>
-          {% endfor %}
-        </div>
-      {% endif %}
-    {% endwith %}
 
-    <form method="post" action="{{ url_for('login') }}">
-        <input type="text" name="username" placeholder="Username" required autofocus />
-        <input type="password" name="password" placeholder="Password" required />
-        <input type="submit" value="Login" />
-    </form>
+    <div class="login-wrapper">
+        <h2>Login Admin</h2>
+
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="flash">
+              {% for message in messages %}
+                <p>{{ message }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <form method="post" action="{{ url_for('login') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <input type="text" name="username" placeholder="Username" required autofocus />
+            <input type="password" name="password" placeholder="Password" required />
+            <input type="submit" value="Login" />
+        </form>
+    </div>
+
 </body>
 </html>

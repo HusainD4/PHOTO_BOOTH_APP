@@ -3,144 +3,16 @@
 <head>
     <meta charset="UTF-8" />
     <title>Upload Template</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f9f9f9;
-            margin: 0;
-        }
-
-        .admin-sidebar {
-            position: fixed;
-            width: 220px;
-            height: 100vh;
-            background-color: #2c3e50;
-            padding: 20px;
-            box-sizing: border-box;
-            color: white;
-            overflow-y: auto;
-        }
-
-        .admin-sidebar h2 {
-            margin-top: 0;
-            margin-bottom: 20px;
-            font-weight: 700;
-            font-size: 1.4rem;
-        }
-
-        .admin-sidebar ul {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .admin-sidebar ul li {
-            margin-bottom: 15px;
-        }
-
-        .admin-sidebar ul li a {
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s ease;
-        }
-
-        .admin-sidebar ul li a:hover {
-            color: #e91e63;
-        }
-
-        .admin-main-content {
-            margin-left: 240px;
-            padding: 30px 40px;
-            min-height: 100vh;
-            background-color: #fff;
-            box-shadow: 0 0 15px rgba(0,0,0,0.05);
-            border-radius: 10px;
-        }
-
-        .admin-main-content h1 {
-            margin-bottom: 30px;
-            color: #333;
-            font-weight: 700;
-            font-size: 2rem;
-        }
-
-        form.form-upload-template {
-            max-width: 480px;
-            background: #fafafa;
-            padding: 25px 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        form.form-upload-template label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #444;
-            margin-top: 20px;
-        }
-
-        form.form-upload-template input[type="text"],
-        form.form-upload-template input[type="file"] {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1.5px solid #ccc;
-            border-radius: 6px;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-        }
-
-        form.form-upload-template input[type="text"]:focus,
-        form.form-upload-template input[type="file"]:focus {
-            outline: none;
-            border-color: #e91e63;
-        }
-
-        button.btn-pink {
-            margin-top: 30px;
-            background-color: #e91e63;
-            color: white;
-            border: none;
-            padding: 14px 24px;
-            font-size: 1.1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 700;
-            transition: background-color 0.3s ease;
-        }
-
-        button.btn-pink:hover {
-            background-color: #ad1457;
-        }
-
-        /* Responsive */
-        @media (max-width: 600px) {
-            .admin-main-content {
-                margin-left: 0;
-                padding: 20px;
-                border-radius: 0;
-                box-shadow: none;
-            }
-
-            form.form-upload-template {
-                padding: 20px;
-                max-width: 100%;
-            }
-
-            .admin-sidebar {
-                position: relative;
-                width: 100%;
-                height: auto;
-                padding: 15px 10px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_style.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/form.css') }}" />
+    <script src="{{ url_for('static', filename='js/sidebar.js') }}"></script>
 </head>
 <body>
     {% include 'admin/sidebar.html' %}
     <div class="admin-main-content">
         <h1>Upload Template Baru</h1>
         <form method="POST" enctype="multipart/form-data" class="form-upload-template">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <label for="template_name">Nama Template:</label>
             <input type="text" name="template_name" id="template_name" required />
 

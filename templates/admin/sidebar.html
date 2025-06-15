@@ -1,12 +1,26 @@
 <div class="admin-sidebar">
     <h2>Admin Menu</h2>
     <ul>
-        <li><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
-        <li><a href="{{ url_for('view_all_templates') }}">Kelola Template</a></li>
-        <li><a href="{{ url_for('upload_template') }}">Tambah Template</a></li>
-        <li><a href="{{ url_for('manage_photos') }}">Hasil Foto</a></li>
-        <li><a href="{{ url_for('view_user') }}">Lihat Halaman User</a></li>
-        
-        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        <li class="{% if request.path == url_for('admin_dashboard') %}active{% endif %}">
+            <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+        </li>
+        <li class="{% if request.path == url_for('view_all_templates') %}active{% endif %}">
+            <a href="{{ url_for('view_all_templates') }}">Kelola Template</a>
+        </li>
+        <li class="{% if request.path == url_for('upload_template') %}active{% endif %}">
+            <a href="{{ url_for('upload_template') }}">Tambah Template</a>
+        </li>
+        <li class="{% if request.path == url_for('manage_photos') %}active{% endif %}">
+            <a href="{{ url_for('manage_photos') }}">Hasil Foto</a>
+        </li>
+
+        <!-- Batas di bawah menu ini -->
+        <li class="separator {% if request.path == url_for('view_user') %}active{% endif %}">
+            <a href="{{ url_for('view_user') }}">Lihat Halaman User</a>
+        </li>
+
+        <li class="{% if request.path == url_for('logout') %}active{% endif %}">
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </li>
     </ul>
 </div>
